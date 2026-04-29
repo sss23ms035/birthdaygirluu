@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>For Bani 💐</title>
+
+<style>
+body {
+  text-align: center;
+  font-family: Arial;
+  background: #ffd6e8;
+}
+
+/* Maze */
+#maze {
+  display: grid;
+  grid-template-columns: repeat(5, 60px);
+  gap: 5px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.cell {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border: 2px solid gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.wall {
+  background: black;
+}
+
+/* Message */
+#msg {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #cc0066;
+}
+
+/* Remote */
+#controls {
+  margin-top: 20px;
+}
+
+#controls button {
+  font-size: 20px;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 10px;
+  border: none;
+  background: white;
+  cursor: pointer;
+}
+
+#controls button:hover {
+  background: #ffe6f0;
+}
+
+/* Final */
+#final {
+  display: none;
+  margin-top: 30px;
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  animation: fall 3s linear infinite;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+  }
+}
+</style>
+
+</head>
+<body>
+
+<h1>🚴‍♂️ Deliver flowers to Bani 💐</h1>
+
+<div id="maze"></div>
+<div id="msg"></div>
+
+<!-- Remote -->
+<div id="controls">
+  <button onclick="move('up')">⬆️</button><br>
+  <button onclick="move('left')">⬅️</button>
+  <button onclick="move('down')">⬇️</button>
+  <button onclick="move('right')">➡️</button>
+</div>
+
+<!-- Final -->
+<div id="final">
+  💐 HAPPY BIRTHDAY BANI 💐 <br><br>
+
+  Okay but seriously…<br><br>
+
+  you’re actually pretty fun to be around,<br>
+  idk why, but I feel really comfortable when we’re walking…<br><br>
+
+  and I still find that night funny,,<br>
+  I went to talk about us,<br>
+  but we ended up talking about everything else instead 😄<br><br>
+
+  but genuinely…<br>
+  stay the same... A little humorous (like your insta stories and on random topics😊), a little funny,<br>
+  and very you.<br><br>
+
+  That works perfectly 👍<br><br>
+
+  💛
+</div>
+
+<script>
+const maze = [
+ [0,0,1,0,0],
+ [1,0,1,0,1],
+ [0,0,0,0,1],
+ [0,1,1,0,0],
+ [0,0,0,1,0]
+];
+
+let x = 0, y = 0;
+
+const messages = {
+ "0,1": "This way to someone pretty cool 😄",
+ "2,2": "Also kinda funny ngl 😂",
+ "3,3": "Lowkey chaotic energy 😌",
+ "4,2": "But still really nice,cute 💛"
+};
+
+const mazeDiv = document.getElementById("maze");
+const msgDiv = document.getElementById("msg");
+
+function draw() {
+ mazeDiv.innerHTML = "";
+ for(let i=0;i<5;i++){
+  for(let j=0;j<5;j++){
+   let d = document.createElement("div");
+   d.className = "cell";
+
+   if(maze[i][j]==1) d.classList.add("wall");
+
+   if(i==y && j==x) d.innerHTML="🚴‍♂️";
+   if(i==4 && j==4) d.innerHTML="💐";
+
+   mazeDiv.appendChild(d);
+  }
+ }
+}
+
+function move(dir){
+ let nx=x, ny=y;
+
+ if(dir=="up") ny--;
+ if(dir=="down") ny++;
+ if(dir=="left") nx--;
+ if(dir=="right") nx++;
+
+ if(nx>=0 && ny>=0 && nx<5 && ny<5 && maze[ny][nx]==0){
+  x=nx; y=ny;
+
+  let key = y + "," + x;
+  if(messages[key]){
+    msgDiv.innerText = messages[key];
+  }
+
+  if(x==4 && y==4){
+    endGame();
+  }
+
+  draw();
+ }
+}
+
+document.addEventListener("keydown", e=>{
+ if(e.key=="ArrowUp") move("up");
+ if(e.key=="ArrowDown") move("down");
+ if(e.key=="ArrowLeft") move("left");
+ if(e.key=="ArrowRight") move("right");
+});
+
+function endGame(){
+ document.getElementById("final").style.display="block";
+ mazeDiv.style.display="none";
+ msgDiv.style.display="none";
+ document.getElementById("controls").style.display="none";
+
+ startConfetti();
+}
+
+function startConfetti(){
+ for(let i=0;i<40;i++){
+   let c = document.createElement("div");
+   c.className = "confetti";
+   c.style.left = Math.random()*100 + "vw";
+   c.style.background = ["#ff4d6d","#ffd166","#06d6a0","#118ab2","#ff99c8"][Math.floor(Math.random()*5)];
+   c.style.animationDuration = (2 + Math.random()*3) + "s";
+   document.body.appendChild(c);
+ }
+}
+
+draw();
+</script>
+
+</body>
+</html>
